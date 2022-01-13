@@ -13,3 +13,4 @@ out/
 .packages
 .dart_tool/
 .vscode/
+.lib/*
