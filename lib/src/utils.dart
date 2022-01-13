@@ -1,8 +1,8 @@
 library upnp.utils;
 
-import "dart:io";
+import 'dart:io';
 
-import "package:xml/xml.dart" hide parse;
+import 'package:xml/xml.dart' hide parse;
 
 class UpnpException {
   final XmlElement element;
@@ -18,7 +18,7 @@ class XmlUtils {
     return node.findElements(name).first;
   }
 
-  static String getTextSafe(XmlElement node, String name) {
+  static String? getTextSafe(XmlElement node, String name) {
     var elements = node.findElements(name);
     if (elements.isEmpty) {
       return null;
@@ -27,23 +27,23 @@ class XmlUtils {
   }
 
   static String unescape(String input) {
-    return input.replaceAll("&gt;", ">").replaceAll("&lt;", "<");
+    return input.replaceAll('&gt;', '>').replaceAll('&lt;', '<');
   }
 
-  static dynamic asRichValue(String value) {
+  static dynamic asRichValue(String? value) {
     if (value == null) {
       return null;
     }
 
-    if (value.toLowerCase() == "true") {
+    if (value.toLowerCase() == 'true') {
       return true;
     }
 
-    if (value.toLowerCase() == "false") {
+    if (value.toLowerCase() == 'false') {
       return false;
     }
 
-    if (value.toLowerCase() == "null") {
+    if (value.toLowerCase() == 'null') {
       return null;
     }
 
@@ -61,17 +61,11 @@ class XmlUtils {
       return null;
     }
 
-    if (type is String) {
-      type = type.toLowerCase();
-    }
+    type = type.toLowerCase();
 
-    if (type == "string") {
+    if (type == 'string') {
       return input.toString();
-    } else if (type == "number" ||
-      type == "integer" ||
-      type == "int" ||
-      type == "double" ||
-      type == "float") {
+    } else if (type == 'number' || type == 'integer' || type == 'int' || type == 'double' || type == 'float') {
       return num.tryParse(input.toString());
     } else {
       return input.toString();
@@ -80,5 +74,5 @@ class XmlUtils {
 }
 
 class UpnpCommon {
-  static HttpClient httpClient = new HttpClient();
+  static HttpClient httpClient = HttpClient();
 }

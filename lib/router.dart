@@ -1,7 +1,7 @@
 library upnp.router;
 
-import "dart:async";
+import 'dart:async';
 
-import "upnp.dart";
+import 'upnp.dart';
 
-part "src/router/router.dart";
+part 'src/router/router.dart';

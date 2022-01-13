@@ -1,3 +1,3 @@
 library upnp.media;
 
-part "src/media/sources.dart";
+part 'src/media/sources.dart';
