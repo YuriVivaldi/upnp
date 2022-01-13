@@ -229,7 +229,7 @@ class DeviceDiscoverer {
   Stream<DiscoveredClient> quickDiscoverClients(
       {Duration timeout = const Duration(seconds: 5),
       Duration searchInterval = const Duration(seconds: 10),
-      required String? query,
+      String? query,
       bool unique = true}) async* {
     if (_sockets.isEmpty) {
       await start();
