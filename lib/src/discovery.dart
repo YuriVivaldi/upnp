@@ -412,6 +412,7 @@ class DiscoveredClient {
         return Device.loadFromXml(location, doc.getElement('root')!);
       });
     } catch (e) {
+      print(e.toString());
       return null;
     }
   }
