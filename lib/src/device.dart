@@ -28,9 +28,11 @@ class Device {
     deviceElement = e;
     var uri = Uri.parse(url);
 
+      print(e.toString());
     urlBase = uri.toString();
 
     if (deviceElement.findElements('device').isEmpty) {
+      print('No device XML');
       throw Exception('ERROR: Invalid Device XML!\n\n$deviceElement');
     }
 
