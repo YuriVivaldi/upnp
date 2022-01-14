@@ -85,7 +85,7 @@ class DeviceDiscoverer {
       try {
         socket.joinMulticast(_v4_Multicast);
       } on OSError catch (e) {
-        print('DiscoveryErro[_v4_Multicast]: ' +
+        print('DiscoveryError[_v4_Multicast]: ' +
             _v4_Multicast.toString() +
             '\n' +
             e.toString());
@@ -401,9 +401,8 @@ class DiscoveredClient {
         try {
           doc = XmlDocument.parse(res.data.toString());
         } on Exception catch (e) {
-          throw FormatException('''ERROR: Failed to parse device
-             description:
-             => $e''');
+          throw FormatException('''ERROR: Failed to parse device description: =>
+              $e''');
         }
 
         return Device.loadFromXml(location, doc.getElement('root')!);
