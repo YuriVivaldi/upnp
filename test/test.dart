@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:upnp/upnp.dart';
 
 void main() {
-  test('test scan', () async {
+  test('Lists all the device in the network', () async {
 // given
     var client = DeviceDiscoverer();
     await client.start();
