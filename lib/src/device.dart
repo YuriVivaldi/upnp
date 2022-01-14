@@ -28,7 +28,7 @@ class Device {
     deviceElement = e;
     var uri = Uri.parse(url);
 
-      print(e.toString());
+    // print(e.toString());
     urlBase = uri.toString();
 
     if (deviceElement.findElements('device').isEmpty) {

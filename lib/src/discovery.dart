@@ -314,7 +314,8 @@ class DeviceDiscoverer {
           list.add(device);
         }
         // ignore: empty_catches
-      } on ArgumentError {} catch (e) {
+      } on ArgumentError {
+      } catch (e) {
         if (!silent) {
           rethrow;
         }
@@ -383,26 +384,22 @@ class DiscoveredClient {
     return buff.toString();
   }
 
-  Future<Device?> getDevice() async {
+  Future<Device> getDevice() async {
     Uri uri;
 
     try {
       uri = Uri.parse(location);
 
-      var dio = Dio();
-      Response response;
-      await dio.getUri(uri).then((res) {
-        response = res;
-
-        if (response.statusCode != 200) {
+      return Dio().getUri(uri).then((res) {
+        if (res.statusCode != 200) {
           throw Exception('''ERROR: Failed to fetch device description.
-             Status Code: ${response.statusCode}''');
+             Status Code: ${res.statusCode}''');
         }
 
         XmlDocument doc;
 
         try {
-          doc = XmlDocument.parse(response.data.toString());
+          doc = XmlDocument.parse(res.data.toString());
         } on Exception catch (e) {
           throw FormatException('''ERROR: Failed to parse device
              description:
@@ -413,7 +410,7 @@ class DiscoveredClient {
       });
     } catch (e) {
       print(e.toString());
-      return null;
+      rethrow;
     }
   }
 }
