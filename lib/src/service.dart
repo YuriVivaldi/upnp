@@ -1,6 +1,7 @@
 part of upnp;
 
-const String _SOAP_BODY = '''
+const String _SOAP_BODY =
+    '''
 <?xml version='1.0' encoding='utf-8'?>
 <s:Envelope xmlns:s='http://schemas.xmlsoap.org/soap/envelope/' s:encodingStyle='http://schemas.xmlsoap.org/soap/encoding/'>
   <s:Body>
@@ -102,17 +103,21 @@ class Service {
   final List<Action> actions;
   final List<StateVariable> stateVariables;
 
+  bool log;
+
   String controlUrl;
   String eventSubUrl;
   String scpdUrl;
 
   Service(this.device, this.type, this.id, this.controlUrl, this.eventSubUrl,
-      this.scpdUrl, this.actions, this.stateVariables);
+      this.scpdUrl, this.actions, this.stateVariables,
+      [bool? printLog])
+      : log = printLog ?? false;
 
   List<String> get actionNames => actions.map((x) => x.name).toList();
 
   Future<String> sendToControlUrl(String name, String param) async {
-    print('\"$type#$name\"');
+    log ? print('\"$type#$name\"') : null;
     var dio = Dio(BaseOptions(
       receiveTimeout: 10000,
       contentType: 'text/xml; charset="utf-8"',

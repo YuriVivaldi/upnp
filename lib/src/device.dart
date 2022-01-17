@@ -17,22 +17,28 @@ class Device {
       modelNumber,
       manufacturerUrl;
 
+  bool log;
+
   List<Icon> icons = [];
   late List<ServiceDescription> services;
 
   List<String> get serviceNames => services.map((x) => x.id).toList();
-  Device() : services = [];
+  Device([bool? printLog])
+      : log = printLog ?? false,
+        services = [];
 
-  Device.loadFromXml(String u, XmlElement e) : services = [] {
+  Device.loadFromXml(String u, XmlElement e, [bool? printLog])
+      : log = printLog ?? false,
+        services = [] {
     url = u;
     deviceElement = e;
     var uri = Uri.parse(url);
 
-    // print(e.toString());
+    log ? print(e.toString()) : null;
     urlBase = uri.toString();
 
     if (deviceElement.findElements('device').isEmpty) {
-      print('No device XML');
+      log ? print('No device XML') : null;
       throw Exception('ERROR: Invalid Device XML!\n\n$deviceElement');
     }
 
@@ -93,13 +99,13 @@ class Device {
           services.firstWhere((it) => it.type == type || it.id == type);
 
       return await service.getService(device: this).catchError((e) {
-        print('Error on ${e as Object}');
+        log ? print('Error on ${e as Object}') : null;
       });
     } on StateError catch (state) {
-      print(url + '\n' + state.toString());
+      log ? print(url + '\n' + state.toString()) : null;
       rethrow;
     } catch (generic) {
-      print(generic);
+      log ? print(generic) : null;
       rethrow;
     }
   }

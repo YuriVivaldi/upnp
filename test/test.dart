@@ -24,7 +24,7 @@ void main() {
         await Future.delayed(Duration(seconds: 5), () {
           client.stop();
           print(
-              '[discontinued:SSDP] \nFinished search, found: [${services.fold<String>('', (prev, element) => prev + '\n\t\t' + element.friendlyName)}\t]');
+              '[discontinued:SSDP] Finished search, found:\n[${services.fold<String>('', (prev, element) => prev + '\n\t\t' + element.friendlyName)}\n]');
           return services.length;
         }),
         greaterThan(0));

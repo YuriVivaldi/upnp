@@ -8,8 +8,11 @@ class DeviceDiscoverer {
   final List<RawDatagramSocket> _sockets = <RawDatagramSocket>[];
   StreamController<DiscoveredClient> _clientController =
       StreamController.broadcast();
+  late final bool log;
 
   late List<NetworkInterface> _interfaces;
+
+  DeviceDiscoverer([bool? printLog]) : log = printLog ?? false;
 
   Future start({bool ipv4 = true, bool ipv6 = true}) async {
     _interfaces = await NetworkInterface.list();
@@ -51,7 +54,7 @@ class DeviceDiscoverer {
               (firstLine.toLowerCase().trim() ==
                   'NOTIFY * HTTP/1.1'.toLowerCase())) {
             var headers = <String, String>{};
-            var client = DiscoveredClient();
+            var client = DiscoveredClient(this.log);
 
             for (var part in parts) {
               var hp = part.split(':');
@@ -85,52 +88,64 @@ class DeviceDiscoverer {
       try {
         socket.joinMulticast(_v4_Multicast);
       } on OSError catch (e) {
-        print('DiscoveryError[_v4_Multicast]: ' +
-            _v4_Multicast.toString() +
-            '\n' +
-            e.toString());
+        log
+            ? print('DiscoveryError[_v4_Multicast]: ' +
+                _v4_Multicast.toString() +
+                '\n' +
+                e.toString())
+            : null;
         try {
           socket.joinMulticast(_v4_Hotspot);
         } on OSError catch (e) {
-          print('DiscoveryError[_v4_Hotspot]: ' +
-              _v4_Hotspot.toString() +
-              '\n' +
-              e.toString());
+          log
+              ? print('DiscoveryError[_v4_Hotspot]: ' +
+                  _v4_Hotspot.toString() +
+                  '\n' +
+                  e.toString())
+              : null;
           try {
             socket.joinMulticast(_v6_Multicast);
           } on OSError catch (e) {
-            print('DiscoveryError[_v6_Multicast]: ' +
-                _v6_Multicast.toString() +
-                '\n' +
-                e.toString());
+            log
+                ? print('DiscoveryError[_v6_Multicast]: ' +
+                    _v6_Multicast.toString() +
+                    '\n' +
+                    e.toString())
+                : null;
           }
         }
       }
     } catch (e) {
-      print('DiscoveryError: ' + e.toString());
+      log ? print('DiscoveryError: ' + e.toString()) : null;
 
       for (var interface in _interfaces) {
         try {
           socket.joinMulticast(_v4_Multicast, interface);
         } on OSError catch (e) {
-          print('DiscoveryError[_v4_Multicast]: ' +
-              _v4_Multicast.toString() +
-              '\n' +
-              e.toString());
+          log
+              ? print('DiscoveryError[_v4_Multicast]: ' +
+                  _v4_Multicast.toString() +
+                  '\n' +
+                  e.toString())
+              : null;
           try {
             socket.joinMulticast(_v4_Hotspot, interface);
           } on OSError catch (e) {
-            print('DiscoveryError[_v4_Hotspot]: ' +
-                _v4_Hotspot.toString() +
-                '\n' +
-                e.toString());
+            log
+                ? print('DiscoveryError[_v4_Hotspot]: ' +
+                    _v4_Hotspot.toString() +
+                    '\n' +
+                    e.toString())
+                : null;
             try {
               socket.joinMulticast(_v6_Multicast, interface);
             } on OSError catch (e) {
-              print('DiscoveryError[_v6_Multicast]: ' +
-                  _v6_Multicast.toString() +
-                  '\n' +
-                  e.toString());
+              log
+                  ? print('DiscoveryError[_v6_Multicast]: ' +
+                      _v6_Multicast.toString() +
+                      '\n' +
+                      e.toString())
+                  : null;
             }
           }
         }
@@ -369,10 +384,11 @@ class DiscoveredClient {
   late String server;
   late String location;
   late Map<String, String> headers;
+  late bool log;
 
-  DiscoveredClient();
+  DiscoveredClient([bool? printLog]);
 
-  DiscoveredClient.fake(this.location);
+  DiscoveredClient.fake(this.location, [bool? printLog]);
 
   @override
   String toString() {
@@ -408,7 +424,7 @@ class DiscoveredClient {
         return Device.loadFromXml(location, doc.getElement('root')!);
       });
     } catch (e) {
-      print(e.toString());
+      log ? print(e.toString()) : null;
       rethrow;
     }
   }

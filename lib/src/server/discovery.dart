@@ -6,8 +6,10 @@ final InternetAddress _v6_Multicast = InternetAddress('FF05::C');
 class UpnpDiscoveryServer {
   final UpnpHostDevice device;
   final String rootDescriptionUrl;
+  bool log;
 
-  UpnpDiscoveryServer(this.device, this.rootDescriptionUrl);
+  UpnpDiscoveryServer(this.device, this.rootDescriptionUrl, [bool? printLog])
+      : log = printLog ?? false;
 
   late RawDatagramSocket? _socket;
   late Timer? _timer;
@@ -43,10 +45,10 @@ class UpnpDiscoveryServer {
           try {
             withAddress(_v6_Multicast);
           } on OSError catch (osErr) {
-            print(osErr.message);
+            log ? print(osErr.message) : null;
           }
         } on OSError catch (osErr) {
-          print(osErr.message);
+          log ? print(osErr.message) : null;
         }
       }
 
